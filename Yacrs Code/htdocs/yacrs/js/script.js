@@ -9,6 +9,7 @@ var choicechecked=[];
 var editq=false;
 var editqnumber;
 var wordlimit=0;
+var refresh=true;
 $(document).ready(function() {
 
     choice=1;
@@ -115,6 +116,7 @@ $(document).ready(function() {
     });
 
     $('body').on('click', '#addqonly', function(){
+        refresh=false;
         addq();
         event.preventDefault();
         var sessionIDval = $('[name="sessID"]').val();
@@ -133,7 +135,8 @@ $(document).ready(function() {
 
     $('body').on('click', '#editoneq', function(){
         var qiIDval = this.value;
-        addq();
+        refresh=false;
+        addq(false);
         var sessionIDval = $('[name="sessID"]').val();
         $.post("sessionrun.php?sessionID="+sessionIDval,
         {
@@ -287,7 +290,11 @@ function addq(){
 
 
     cleardata();
-    checktype();
+    if (refresh === true){
+        checktype();
+    }else{
+        refresh=true;
+    }
 
 }
 
