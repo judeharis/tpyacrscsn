@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title><%section name="pagetitle"%></title>
+		<link rel="stylesheet" type="text/css" media="Screen" href="html/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" media="Screen" href="html/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" media="Screen" href="html/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" media="Screen" href="html/yacrs-base.css" />
+		<link rel="stylesheet" type="text/css" media="Screen" href="html/yacrs-theme.css" />
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+	<body>
+		<div id="pageHeader">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-6">
+						<div id="branding">
+							<h1 class="logo">Class Response</h1>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<%section name="logoutLink" div_id="logoutLink"%>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="main">
+			<div class="container">
+				<%section name="breadcrumb" div_id="breadcrumb"%>
+				<%section name="sideLinks" div_id="links"%>
+                <div id="content">
+						<%section name="headings"%>
+	          			<%section name="loginBox" div_id="loginBox"%>
+	                    <%section name="coursesBlock" div_id="coursesBlock"%>
+	                    <%section name="sideInfo" div_id="linksArea"%>
+			  			<%section name="mainBody"%>
+	            </div>
+            </div>
+		</div>
+
+ 		<div class="footer" id="pageFooter">
+			<div class="container">
+			</div>
+		</div>
+		<div class="container">
+  			<%section name="afterContent"%>
+	    </div>
+	    <footer>
+	        <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+            			<h3 class="glasgow">University <em>of</em> Glasgow</h3>
+            			<p class="address">Glasgow, G12 8QQ, Scotland</p>
+            			<p class="phone">Tel +44 (0) 141 330 2000</p>
+            			<p class="charity">The University of Glasgow is a registered Scottish charity: Registration Number SC004401</p>
+		            </div>
+                    <div class="col-sm-3 footer-links">
+                        <h4>Site Links</h4>
+                        <ul>
+            				<li><a href="index.php">Class Response Home</a></li>
+			            </ul>
+		            </div>
+            		<div class="col-sm-3 footer-links">
+  						<%section name="afterContent"%>
+            			<h4>Current Students</h4>
+            			<ul>
+            				<li><a href="http://www.gla.ac.uk/students/">Information for students</a></li>
+            				<li><a href="http://www.gla.ac.uk/students/myglasgow/">MyGlasgow students</a></li>
+            			</ul>
+
+            			<h4>Staff</h4>
+            			<ul>
+            				<li><a href="http://www.gla.ac.uk/myglasgow/staff/">MyGlasgow staff</a></li>
+            			</ul>
+            		</div>
+	            </div>
+            </div>
+	    </footer>
+	</body>
+</html>
