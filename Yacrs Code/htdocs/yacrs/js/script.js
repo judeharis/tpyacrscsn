@@ -152,7 +152,7 @@ $(document).ready(function() {
         });
     });
 
-    $('body').on('click','#showquestion',function(){
+    $('body').on('click','#editbtn',function(){
         cleardata()
         var sessionIDval = $('[name="sessID"]').val();
         var qiIDval = this.value;
@@ -195,6 +195,7 @@ $(document).ready(function() {
     $('body').on('click','#makeqactive', function(){
         var qiactivatelistval=[];
         var sessionIDval = $('[name="sessID"]').val();
+        var qiIDval = $(this).attr('value');
         $('[name="qactivate"]').each(function(){
             if ($(this).is(":checked")){
                 qiactivatelistval.push(this.value);
@@ -204,6 +205,7 @@ $(document).ready(function() {
         $.post("sessionrun.php?sessionID="+sessionIDval,
         {
             qiactivatelist:qiactivatelistval,
+            qiID:qiIDval,
             activateqs:true,
             ajax:true
         },function(data){

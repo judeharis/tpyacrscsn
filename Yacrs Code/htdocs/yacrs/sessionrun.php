@@ -168,14 +168,14 @@ else
 
     $template->pageData['mainBody'] .='<button id="showaddq" onclick="showaddq()"class="btn" type="button" value="">Make New Question</button>';
     $template->pageData['mainBody'] .='<div id="box" name="mainbit">';
+
+    //$template->pageData['mainBody'] .= $aqform->getHtml();
+    $template->pageData['mainBody'] .='</div>';
     if($thisSession->questionMode == 0){
         $template->pageData['mainBody'] .= "<div><a href='switchmode.php?sessionID={$thisSession->id}'>Close question and switch to student paced (multi-question) mode.</a></div>";
     }else{
         $template->pageData['mainBody'] .= "<div><a href='switchmode.php?sessionID={$thisSession->id}'>Close questions and switch to teacher paced (single question) mode.</a></div>";
     }
-    //$template->pageData['mainBody'] .= $aqform->getHtml();
-    $template->pageData['mainBody'] .='</div>';
-
 
 
     if(sizeof($quTitles))
@@ -258,8 +258,13 @@ if(!isset($_REQUEST['ajax'])){
     }
     if(isset($_REQUEST['activateqs'])){
         echo $_REQUEST['qiactivatelist'];
-        $thisSession->extras[currentQuestions] = $_REQUEST['qiactivatelist'];
-        $thisSession->update();
+        if($thisSession->questionMode == 0){
+            activateSingleQu($thisSession, $_REQUEST['qiID']);
+        }else{
+            $thisSession->extras[currentQuestions] = $_REQUEST['qiactivatelist'];
+            $thisSession->update();
+        }
+
     }
     if(isset($_REQUEST['deactivateqs'])){
         echo $_REQUEST['qideactivatelist'];
@@ -282,14 +287,19 @@ function sidebar(&$thisSession){
     foreach($qiIDs as $qiID){
         $qunum++;
         $qi = questionInstance::retrieve_questionInstance($qiID);
-        if ($thisSession->extras[currentQuestions] != null && in_array($qiID, $thisSession->extras[currentQuestions])) {
-            $out.='<button id="showquestion" style="background-color: #4CAF50;"class="btn" type="button" value="'.$qiID.'">Q'.$qunum.':'.$qi->title.'</button>';
+        if ($thisSession->extras[currentQuestions] != null && in_array($qiID, $thisSession->extras[currentQuestions]) || $thisSession->currentQuestion == $qiID) {
+            $out.='<button id="showquestion" style="width:30%;background-color: #4CAF50;"class="btn" type="button" value="'.$qiID.'">Q'.$qunum.':'.$qi->title.'</button>';
+            $out.='<button id="editbtn"  style=" background-color: white;color: black;border: 2px solid #4CAF50;" class="btn" type="button" value="'.$qiID.'">Edit</button>';
         }else{
-            $out.='<button id="showquestion" class="btn" type="button" value="'.$qiID.'">Q'.$qunum.':'.$qi->title.'</button>';
+            $out.='<button id="showquestion" style="width:30%;" class="btn" type="button" value="'.$qiID.'">Q'.$qunum.':'.$qi->title.'</button>';
+            $out.='<button id="editbtn"  style=" background-color: white;color: black;border: 2px solid;" class="btn" type="button" value="'.$qiID.'">Edit</button>';
         }
 
+        // $out.='<button id="editbtn"  style=" background-color: white;color: black;border: 2px solid #4CAF50;" class="btn" type="button" value="'.$qiID.'">Edit</button>';
         if($thisSession->questionMode == 1){
-            $out.= '<input type="checkbox" name="qactivate" value="'.$qiID.'">';
+            $out.= '<input  type="checkbox" name="qactivate" value="'.$qiID.'"><br>';
+        }else{
+            $out.='<button id="makeqactive"  style=" background-color: white;color: black;border: 2px solid;" class="btn" type="button" value="'.$qiID.'">Activate</button>';
         }
     }
     if($thisSession->questionMode == 1){
