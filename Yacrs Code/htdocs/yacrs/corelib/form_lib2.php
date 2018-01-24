@@ -108,12 +108,12 @@ abstract class nbform
 	    $out .= "<div class='col-sm-8'>";
 	    if((is_array($validateMsgs))&&(array_key_exists($name, $validateMsgs)))
 	        $out .= "<div class='alert alert-danger'>{$validateMsgs[$name]}</div>";
-
+	    
 	    $out .= '<input type="text" class="form-control" name="'.$name.'" id="'.$name.'" value="'.$value.'" size="'.$width.'"';
         if((isset($this->disabled[$name]))&&($this->disabled[$name]))
           	$out .= ' disabled="1" ';
         $out .= "/></div></div>";
-
+        
 	    return $out;
 	}
 
@@ -140,9 +140,9 @@ abstract class nbform
         $out .= "<label class='col-sm-4 control-label' for=\"$name\">$caption</label>";
         $out .= "<div class='col-sm-8'>";
 	    $out .= "<input type=\"hidden\" name=\"$name\" value=\"$value\" />";
-        $out .= '<p class="form-control-static" id="'.$name.'">'.$caption.'</p>';
+        $out .= '<p class="form-control-static" id="'.$name.'">'.$caption.'</p>'; 
         $out .= "/></div></div>";
-
+	    
 	    return $out;
 	}
 
@@ -188,7 +188,7 @@ abstract class nbform
 	    $out .= "<div class='col-sm-8 col-sm-offset-4'>";
 	    if((is_array($validateMsgs))&&(array_key_exists($name, $validateMsgs)))
 	        $out .= "<div class='alert alert-danger'>{$validateMsgs[$name]}</div>";
-
+	    
 	    $out .= "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"$name\" id=\"$name\" value=\"1\"";
 	    if($checked)
 	    	$out .= ' checked="1" ';
@@ -197,7 +197,7 @@ abstract class nbform
         $out .= "/>";
         $out .= $caption;
         $out .= "</label></div></div></div>";
-
+        
 	    return $out;
 	}
 
@@ -375,7 +375,7 @@ abstract class nbform
 	    $out .= "<div class='col-sm-8'>";
 	    if((is_array($validateMsgs))&&(array_key_exists($name, $validateMsgs)))
 	        $out .= "<div class='alert alert-danger'>{$validateMsgs[$name]}</div>";
-
+	        
 	    if(!is_array($options))
 	        $options = explode(",",$options);
 	    $out .= "<select class=\"form-control\" name=\"$name\" id=\"$name\"";
@@ -398,9 +398,9 @@ abstract class nbform
 
 	    }
 	    $out .= "</select></div></div>";
-
+        
 	    return $out;
-
+		
 	}
 
 	function selectListInputCompact($caption, $name, $options, $value="", $required=false, $validateMsgs=null)

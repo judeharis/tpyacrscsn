@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>OMP Analysis prototype</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/OMPsearch.js"></script>
+<link rel="stylesheet" type="text/css" href="css/analysis.css">
+</head>
+<body>
+<form id="search">
+  <input id="keyword" type="text" value="">
+  <input id="SearchContain" type="button" value="Search for contain that word(Intersection)">
+  <input id="OrContain" type="button" value="Or contain that word(Union)">
+  <input id="SearchNotContain" type="button" value="Search for not contain that word(Complement)">
+</form>
+
+<div>Respons:<num id="num_respons"></num></div>
+History:(click it to return status)<div class="history">You haven't search any word yet</div><br>
+Search result:<num id="Searchresult"></num><br>
+<%section name="table"%>
+
+</body>
+</html>

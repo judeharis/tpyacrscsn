@@ -44,7 +44,7 @@ $CFG['screenshotpath'] = "userimages";
 
 // Database settings
 $DBCFG['type']='MySQL';
-$DBCFG['host']="localhost"; // Host name
+$DBCFG['host']="127.0.0.1"; // Host name
 $DBCFG['username']="yacrs"; // Mysql username
 $DBCFG['password']="yacrs"; // Mysql password
 $DBCFG['db_name']="yacrs"; // Database name

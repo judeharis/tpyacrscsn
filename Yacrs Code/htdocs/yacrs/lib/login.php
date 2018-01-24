@@ -3,9 +3,9 @@ require_once('corelib/ldap_login.php');
 
 function checkLoggedInUser($allowLogin = true, &$error = false)
 {
-	/*# In future I think the cookie should just contain a user ID, and the rest of uinfo
-	    should be replaced by the userInfo class... Maybe this is quicker for students though...
-	*/
+/*# In future I think the cookie should just contain a user ID, and the rest of uinfo
+    should be replaced by the userInfo class... Maybe this is quicker for students though...
+*/
 	global $CFG;
     $error = false;
     $uinfo = false;
@@ -16,11 +16,7 @@ function checkLoggedInUser($allowLogin = true, &$error = false)
         if((isset($CFG['adminname']))&&($CFG['adminname']==$_REQUEST['uname'])&&(isset($CFG['adminpwd']))&&($CFG['adminpwd']!=''))
             $uinfo = checkSuperLogin($_REQUEST['uname'], $_REQUEST['pwd']);
         else
-			$uinfo = makeuser($_REQUEST['uname'], $_REQUEST['pwd']);
-            //$uinfo = checkLogin($_REQUEST['uname'], $_REQUEST['pwd']);
-
-
-
+            $uinfo = checkLogin($_REQUEST['uname'], $_REQUEST['pwd']);
         if($uinfo)
         {
            //# Should also check by e-mail
@@ -70,9 +66,6 @@ function checkLoggedInUser($allowLogin = true, &$error = false)
         	$error = "Incorrect username or password.";
         }
     }
-
-
-
     elseif(isset($_REQUEST['logout']))
     {
         setcookie($CFG['appname'].'_login', '', 0, '', '', false, true);
@@ -93,10 +86,6 @@ function checkLoggedInUser($allowLogin = true, &$error = false)
     	return false;
     }
 }
-
-
-
-
 
 function CreateLoginCookie($uinfo)
 {
@@ -141,13 +130,13 @@ function loginBox($uinfo, $error = '')
 		$out .= "<input type='text' name='uname' id='uname' class='form-control' /></div></div>";
 		$out .= "<div class='form-group'><label for='pwd' class='col-sm-4 control-label'>Password</label>";
 		$out .= "<div class='col-sm-8'><input type='password' name='pwd' id='pwd' class='form-control'/></div></div>";
-
+        
         foreach($_REQUEST as $k=>$v)
         {
             if(($k != 'pwd')&&($k != 'uname'))
                 $out .= "<input type='hidden' name='$k' value='$v'/>";
         }
-
+        
 		$out .= "<div class='form-group'><div class='col-sm-4 col-sm-push-4'><input type='submit' name='submit' value='Log in' class='btn btn-block btn-success'/></div><div class='col-sm-4 col-sm-push-4'><a href='join.php' class='btn btn-link btn-block'>Anonymous Guest Access</a></div></div>";
 	    $out .= "</form>";
     }
@@ -156,31 +145,6 @@ function loginBox($uinfo, $error = '')
     $out .= '</div>';
     return $out;
 }
-
-
-//Added by Jude
-function makeuser($username, $password, &$error=false)
-{
-	global $CFG;
-    $error = false;
-    $uinfo = array();
-    //echo '<pre>'; print_r($record); echo '</pre>';
-    $uinfo['uname'] = $username;
-    $uinfo['gn'] = $username;
-    $uinfo['sn'] = '';
-    $uinfo['email'] = '';
-    $uinfo['isAdmin'] = false;
-    $uinfo['sessionCreator'] = false;
-    return $uinfo;
-}
-
-
-
-
-
-
-
-
 
 function checkSuperLogin($username, $password, &$error=false)
 {

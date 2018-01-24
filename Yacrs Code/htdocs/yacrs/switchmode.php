@@ -28,5 +28,9 @@ else
 }
 $thisSession->update();
 
-header("Location: sessionrun.php?sessionID={$thisSession->id}");
-echo "<a href='sessionrun.php?sessionID={$thisSession->id}'>Continue</a>";
+header("Location: runsession.php?sessionID={$thisSession->id}");
+echo "<a href='runsession.php?sessionID={$thisSession->id}'>Continue</a>";
+
+
+
+

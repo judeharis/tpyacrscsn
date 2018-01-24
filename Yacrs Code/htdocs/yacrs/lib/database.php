@@ -258,13 +258,6 @@ function updateDataBase_yacrs_v0p3p2_to_v0p4p0()
 	dataConnection::runQuery($query);
 }
 
-
-function updateDataBase_yacrs_temp()
-{
-        // Add field isPartial to response
-	$query = "ALTER TABLE yacrs_questioninstance ADD COLUMN qidefinition TEXT;";
-	dataConnection::runQuery($query);
-}
 //Skeleton PHP classes for data tables
 
 class lticonsumer
@@ -277,13 +270,16 @@ class lticonsumer
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->keyHash = "";
-		$this->consumer_key = "";
-		$this->name = "";
-		$this->secret = "";
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->keyHash = "";
+			$this->consumer_key = "";
+			$this->name = "";
+			$this->secret = "";
+		}
 	}
 
 	function fromArray($asArray)
@@ -459,30 +455,33 @@ class session
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->ownerID = "";
-		$this->title = "";
-		$this->created = time();
-		$this->questions = "";
-		$this->currentQuestion = "0";
-		$this->questionMode = "0";
-		$this->endtime = time();
-		$this->sessionstarttime = time();
-		$this->sessionOpen = false;
-		$this->activeSubsession_id = null; // foreign key, needs dealt with.
-		$this->sessionendtime = time();
-		$this->visible = false;
-		$this->allowGuests = false;
-		$this->multiSession = false;
-		$this->ublogRoom = "0";
-		$this->maxMessagelength = "0";
-		$this->allowQuReview = false;
-		$this->allowTeacherQu = false;
-		$this->courseIdentifier = "";
-		$this->defaultQuActiveSecs = "0";
-		$this->extras = false;
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->ownerID = "";
+			$this->title = "";
+			$this->created = time();
+			$this->questions = "";
+			$this->currentQuestion = "0";
+			$this->questionMode = "0";
+			$this->endtime = time();
+			$this->sessionstarttime = time();
+			$this->sessionOpen = false;
+			$this->activeSubsession_id = null; // foreign key, needs dealt with.
+			$this->sessionendtime = time();
+			$this->visible = false;
+			$this->allowGuests = false;
+			$this->multiSession = false;
+			$this->ublogRoom = "0";
+			$this->maxMessagelength = "0";
+			$this->allowQuReview = false;
+			$this->allowTeacherQu = false;
+			$this->courseIdentifier = "";
+			$this->defaultQuActiveSecs = "0";
+			$this->extras = false;
+		}
 	}
 
 	function fromArray($asArray)
@@ -739,7 +738,6 @@ class session
        $qi->theQuestion_id = $qu->id;
 	   $qi->inSession_id = $this->id;
        $qi->title = $qu->title;
-	   $qi->qidefinition = $qu->definition;
        $qi->insert();
        $this->questions = trim($this->questions.','.$qi->id," \t\r\n,");
        $this->update();
@@ -871,11 +869,14 @@ class extraTeachers
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->session_id = null; // foreign key, needs dealt with.
-		$this->teacherID = "";
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->session_id = null; // foreign key, needs dealt with.
+			$this->teacherID = "";
+		}
 	}
 
 	function fromArray($asArray)
@@ -983,13 +984,16 @@ class subsession
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->session_id = null; // foreign key, needs dealt with.
-		$this->title = "";
-		$this->starttime = time();
-		$this->endtime = time();
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->session_id = null; // foreign key, needs dealt with.
+			$this->title = "";
+			$this->starttime = time();
+			$this->endtime = time();
+		}
 	}
 
 	function fromArray($asArray)
@@ -1104,12 +1108,15 @@ class ltisessionlink
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->client_id = null; // foreign key, needs dealt with.
-		$this->resource_link_id = "";
-		$this->session_id = null; // foreign key, needs dealt with.
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->client_id = null; // foreign key, needs dealt with.
+			$this->resource_link_id = "";
+			$this->session_id = null; // foreign key, needs dealt with.
+		}
 	}
 
 	function fromArray($asArray)
@@ -1247,17 +1254,20 @@ class userInfo
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->username = "";
-		$this->name = "";
-		$this->email = "";
-		$this->nickname = "";
-		$this->phone = "";
-		$this->sessionCreator = false;
-		$this->isAdmin = false;
-		$this->teacherPrefs = false;
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->username = "";
+			$this->name = "";
+			$this->email = "";
+			$this->nickname = "";
+			$this->phone = "";
+			$this->sessionCreator = false;
+			$this->isAdmin = false;
+			$this->teacherPrefs = false;
+		}
 	}
 
 	function fromArray($asArray)
@@ -1455,15 +1465,18 @@ class question
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->ownerID = "";
-		$this->session_id = null; // foreign key, needs dealt with.
-		$this->title = "";
-		$this->definition = false;
-		$this->responsetype = "";
-		$this->multiuse = false;
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->ownerID = "";
+			$this->session_id = null; // foreign key, needs dealt with.
+			$this->title = "";
+			$this->definition = false;
+			$this->responsetype = "";
+			$this->multiuse = false;
+		}
 	}
 
 	function fromArray($asArray)
@@ -1643,11 +1656,14 @@ class systemQuestionLookup
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->qu_id = null; // foreign key, needs dealt with.
-		$this->name = "";
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->qu_id = null; // foreign key, needs dealt with.
+			$this->name = "";
+		}
 	}
 
 	function fromArray($asArray)
@@ -1799,22 +1815,23 @@ class questionInstance
 	var $endtime;
 	var $screenshot;
 	var $extras;
-	var $qidefinition;
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->title = "";
-		$this->theQuestion_id = null; // foreign key, needs dealt with.
-		$this->inSession_id = null; // foreign key, needs dealt with.
-		$this->subsession_id = null; // foreign key, needs dealt with.
-		$this->starttime = time();
-		$this->endtime = time();
-		$this->screenshot = "";
-		$this->extras = false;
-		$this->qidefinition = false;
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->title = "";
+			$this->theQuestion_id = null; // foreign key, needs dealt with.
+			$this->inSession_id = null; // foreign key, needs dealt with.
+			$this->subsession_id = null; // foreign key, needs dealt with.
+			$this->starttime = time();
+			$this->endtime = time();
+			$this->screenshot = "";
+			$this->extras = false;
+		}
 	}
 
 	function fromArray($asArray)
@@ -1828,7 +1845,6 @@ class questionInstance
 		$this->endtime = dataConnection::db2time($asArray['endtime']);
 		$this->screenshot = $asArray['screenshot'];
 		$this->extras = unserialize($asArray['extras']);
-		$this->qidefinition = unserialize($asArray['qidefinition']);
 	}
 
 	static function retrieve_questionInstance($id)
@@ -1868,7 +1884,7 @@ class questionInstance
 	function insert()
 	{
 		//#Any required insert methods for foreign keys need to be called here.
-		$query = "INSERT INTO yacrs_questionInstance(title, theQuestion_id, inSession_id, subsession_id, starttime, endtime, screenshot, extras, qidefinition) VALUES(";
+		$query = "INSERT INTO yacrs_questionInstance(title, theQuestion_id, inSession_id, subsession_id, starttime, endtime, screenshot, extras) VALUES(";
 		$query .= "'".dataConnection::safe($this->title)."', ";
 		if($this->theQuestion_id!==null)
 			$query .= "'".dataConnection::safe($this->theQuestion_id)."', ";
@@ -1885,8 +1901,7 @@ class questionInstance
 		$query .= "'".dataConnection::time2db($this->starttime)."', ";
 		$query .= "'".dataConnection::time2db($this->endtime)."', ";
 		$query .= "'".dataConnection::safe($this->screenshot)."', ";
-		$query .= "'".dataConnection::safe(serialize($this->extras))."', ";
-		$query .= "'".dataConnection::safe(serialize($this->qidefinition))."');";
+		$query .= "'".dataConnection::safe(serialize($this->extras))."');";
 		dataConnection::runQuery("BEGIN;");
 		$result = dataConnection::runQuery($query);
 		$result2 = dataConnection::runQuery("SELECT LAST_INSERT_ID() AS id;");
@@ -1906,7 +1921,6 @@ class questionInstance
 		$query .= ", endtime='".dataConnection::time2db($this->endtime)."' ";
 		$query .= ", screenshot='".dataConnection::safe($this->screenshot)."' ";
 		$query .= ", extras='".dataConnection::safe(serialize($this->extras))."' ";
-		$query .= ", qidefinition='".dataConnection::safe(serialize($this->qidefinition))."' ";
 		$query .= "WHERE id='".dataConnection::safe($this->id)."';";
 		return dataConnection::runQuery($query);
 	}
@@ -1937,7 +1951,6 @@ class questionInstance
 		$out .= '<endtime>'.htmlentities($this->endtime)."</endtime>\n";
 		$out .= '<screenshot>'.htmlentities($this->screenshot)."</screenshot>\n";
 		$out .= '<extras>'.htmlentities($this->extras)."</extras>\n";
-		$out .= '<qidefinition>'.htmlentities($this->qidefinition)."</qidefinition>\n";
 		$out .= "</questionInstance>\n";
 		return $out;
 	}
@@ -1989,18 +2002,21 @@ class sessionMember
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->session_id = null; // foreign key, needs dealt with.
-		$this->userID = "";
-		$this->name = "";
-		$this->nickname = "";
-		$this->email = "";
-		$this->user_id = null; // foreign key, needs dealt with.
-		$this->joined = time();
-		$this->lastresponse = time();
-		$this->mobile = "";
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->session_id = null; // foreign key, needs dealt with.
+			$this->userID = "";
+			$this->name = "";
+			$this->nickname = "";
+			$this->email = "";
+			$this->user_id = null; // foreign key, needs dealt with.
+			$this->joined = time();
+			$this->lastresponse = time();
+			$this->mobile = "";
+		}
 	}
 
 	function fromArray($asArray)
@@ -2179,14 +2195,17 @@ class response
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->user_id = null; // foreign key, needs dealt with.
-		$this->question_id = null; // foreign key, needs dealt with.
-		$this->value = "";
-		$this->isPartial = false;
-		$this->time = time();
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->user_id = null; // foreign key, needs dealt with.
+			$this->question_id = null; // foreign key, needs dealt with.
+			$this->value = "";
+			$this->isPartial = false;
+			$this->time = time();
+		}
 	}
 
 	function fromArray($asArray)
@@ -2365,17 +2384,20 @@ class message
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->user_id = null; // foreign key, needs dealt with.
-		$this->session_id = null; // foreign key, needs dealt with.
-		$this->subsession_id = null; // foreign key, needs dealt with.
-		$this->isTeacherQu = false;
-		$this->private = false;
-		$this->posted = time();
-		$this->message = "";
-		$this->replyTo_id = null; // foreign key, needs dealt with.
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->user_id = null; // foreign key, needs dealt with.
+			$this->session_id = null; // foreign key, needs dealt with.
+			$this->subsession_id = null; // foreign key, needs dealt with.
+			$this->isTeacherQu = false;
+			$this->private = false;
+			$this->posted = time();
+			$this->message = "";
+			$this->replyTo_id = null; // foreign key, needs dealt with.
+		}
 	}
 
 	function fromArray($asArray)
@@ -2613,11 +2635,14 @@ class tag
 
 	function __construct($asArray=null)
 	{
-		$this->id = null; //primary key
-		$this->text = "";
-		$this->session_id = null; // foreign key, needs dealt with.
 		if($asArray!==null)
 			$this->fromArray($asArray);
+		else
+		{
+			$this->id = null; //primary key
+			$this->text = "";
+			$this->session_id = null; // foreign key, needs dealt with.
+		}
 	}
 
 	function fromArray($asArray)
@@ -2779,3 +2804,4 @@ class tag
 
 	//[[USERCODE_tag]] WEnd of custom class members.
 }
+

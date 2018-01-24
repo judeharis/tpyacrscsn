@@ -7,4 +7,4 @@ require_once('corelib/templateMerge.php');
 if(!file_exists('../yacrs_config.php'))
     header("Location: configuration.html");
 include_once('../yacrs_config.php');
-
+?>

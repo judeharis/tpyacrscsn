@@ -24,7 +24,6 @@ require_once('lib/forms.php');
 require_once('lib/shared_funcs.php');
 include_once('corelib/mobile.php');
 include_once('lib/lti_funcs.php');
-
 $template = new templateMerge($TEMPLATE);
 if($deviceType=='mobile')
     $template->pageData['modechoice'] = "<a href='{$_SERVER['PHP_SELF']}?mode=computer'>Use computer mode</a>";
@@ -40,43 +39,39 @@ $template->pageData['breadcrumb'] = $CFG['breadCrumb'];
 $template->pageData['breadcrumb'] .= '<li>YACRS</li>';
 $template->pageData['breadcrumb'] .= '</ul>';
 
+$txt1 = "Learn PHP";
 
-
-echo'<script type="text/javascript" src="js/jquery-3.2.1.js"></script>';
-echo'<script src="js/script.js" type="text/javascript"></script>';
 if($uinfo==false)
 {
 	$template->pageData['headings'] = "<h1  style='text-align:center; padding:10px;'>Login</h1>";
     if((isset($CFG['ldaphost']))&&($CFG['ldaphost']!=''))
     {
-
+		echo "<p>" . $txt1 . "</p>";
         $template->pageData['loginBox'] = loginBox($uinfo, $loginError);
     }
     if(file_exists('logininfo.htm'))
 	    $template->pageData['mainBody'] = file_get_contents('logininfo.htm').'<br/>';
     $template->pageData['logoutLink'] = "<p style='text-align:right;'><a href='join.php'>Or click here for guest/anonymous accesss</a></p>";
 }
-
 else
 {
-
     $thisSession = requestSet('sessionID') ? session::retrieve_session(requestInt('sessionID')):false;
     if($thisSession)
     {
         if(checkPermission($uinfo, $thisSession))
         {
-            $template->pageData['mainBody'] .= "<a href='sessionrun.php?sessionID={$thisSession->id}'>Run session</a>";
-            //header("Location: runsession.php?sessionID={$thisSession->id}");
+            $template->pageData['mainBody'] .= "<a href='runsession.php?sessionID={$thisSession->id}'>Run session</a>";
+            header("Location: runsession.php?sessionID={$thisSession->id}");
         }
         elseif(($thisSession->currentQuestion==0)&&($thisSession->ublogRoom>0))
         {
             $template->pageData['mainBody'] .= "<a href='chat.php?sessionID={$thisSession->id}'>Join session</a>";
-            //header("Location: chat.php?sessionID={$thisSession->id}");
+            header("Location: chat.php?sessionID={$thisSession->id}");
         }
         else
         {
             $template->pageData['mainBody'] .= "<a href='vote.php?sessionID={$thisSession->id}'>Join session</a>";
-            //header("Location: vote.php?sessionID={$thisSession->id}");
+            header("Location: vote.php?sessionID={$thisSession->id}");
         }
     }
     elseif($ltiSessionID = getLTISessionID())
@@ -88,7 +83,7 @@ else
             if($s !== false)
             {
 	            $ctime = strftime("%A %e %B %Y at %H:%M", $s->created);
-	            $template->pageData['mainBody'] .= "<li><p class='session-title'><a href='sessionrun.php?sessionID={$s->id}'>{$s->title}</a><span class='user-badge session-id'><i class='fa fa-hashtag'></i> {$s->id}</span></p><p class='session-details'> Created $ctime</p><a href='editsession.php?sessionID={$s->id}'>Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'>Delete</a></li>";
+	            $template->pageData['mainBody'] .= "<li><p class='session-title'><a href='runsession.php?sessionID={$s->id}'>{$s->title}</a><span class='user-badge session-id'><i class='fa fa-hashtag'></i> {$s->id}</span></p><p class='session-details'> Created $ctime</p><a href='editsession.php?sessionID={$s->id}'>Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'>Delete</a></li>";
 	            //$template->pageData['mainBody'] .= "<li>Session number: <b>{$s->id}</b> <a href='runsession.php?sessionID={$s->id}'>{$s->title}</a> (Created $ctime) <a href='editsession.php?sessionID={$s->id}'>Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'>Delete</a></li>";
                 $template->pageData['mainBody'] .= "<li>To use the teacher control app for this session login with username: <b>{$s->id}</b> and password <b>".substr($s->ownerID, 0, 8)."</b></li>";
 
@@ -108,128 +103,15 @@ else
     else
     {
 	    $template->pageData['mainBody'] = sessionCodeinput();
-        //If staff begins
 	    if($uinfo['sessionCreator'])
 	    {
-            //Added by Jude
-            $template->pageData['mainBody'] .='<div id="showform" class="row"><div class="col-sm-8 col-sm-push-4"><button onclick="showform()" class="btn btn-primary fa fa-plus-circle"  type="button" name="addquestion">Create a New Session</button></div></div>';
-            $template->pageData['mainBody'] .= '<div id="box" name="newsessionform"><h2 class="page-section">Create a New Session</h2>';
-
-            $esform = new makeSession_form();
-            if($esform->getStatus() == FORM_NOTSUBMITTED)
-            {
-                $esform->visible = true; // default to showing sessions.
-                $esform->allowQuReview = true; // default to allow change of answers while response open.
-                $esform->allowFullReview = true; // default to allow students to view their answers after class.
-            }
-
-            if(requestSet('sessionID'))
-            {
-                $thisSession = session::retrieve_session(requestInt('sessionID'));
-            }
-            else
-            {
-                $thisSession = false;
-            }
-            switch($esform->getStatus())
-            {
-            case FORM_NOTSUBMITTED:
-                if($thisSession)
-                {
-                    $esform->setData($thisSession);
-                    $esform->sessionID = $thisSession->id;
-                    if(isset($thisSession->extras['customScoring']))
-                        $esform->customScoring = $thisSession->extras['customScoring'];
-                    if(isset($thisSession->extras['allowFullReview']))
-                        $esform->allowFullReview = $thisSession->extras['allowFullReview'];
-                    $esform->teachers = implode(', ', $thisSession->getExtraTeacherIDs());
-                }
-                else
-                {
-                    $esform->maxMessagelength = 140;
-                }
-                $template->pageData['mainBody'] .= $esform->getHtml();
-                break;
-            case FORM_SUBMITTED_INVALID:
-                $template->pageData['mainBody'] .= $esform->getHtml();
-                break;
-            case FORM_SUBMITTED_VALID:
-                if(!$thisSession)
-                {
-                    $thisSession = new session();
-                    $thisSession->ownerID = $uinfo['uname'];
-                }
-                $esform->getData($thisSession);
-                if(isset($esform->customScoring))
-                    $thisSession->extras['customScoring'] = $esform->customScoring;
-                else
-                    $thisSession->extras['customScoring'] = false;
-                $thisSession->extras['allowFullReview'] = $esform->allowFullReview;
-                if($thisSession->id > 0)
-                    $thisSession->update();
-                else
-                {
-                    $thisSession->created = time();
-                    $thisSession->id = $thisSession->insert();
-                }
-                $thisSession->updateExtraTeachers($esform->teachers);
-                if(strlen($thisSession->courseIdentifier))
-                    enrolStudents($thisSession->id, $thisSession->courseIdentifier);
-
-                $questions = isset($_REQUEST['qz']) ? $_REQUEST['qz'] : false;
-                if($questions){
-                    foreach ($questions as &$q) {
-                        $json_questions = json_decode($q);
-                        $theQu = new question();
-                        $theQu->title = $json_questions->question;
-                        if($json_questions->questiontype=="mcq"){
-                            $definition="";
-                            for($i=1; $i< ($json_questions->choicecounter)+1;$i++ ){
-                                if($json_questions->{'choicechecked'.$i} =="true"){
-                                    $definition.="*";
-                                };
-                                $definition.= $json_questions->{'choice'.$i};
-                                $definition.="\n";
-                            }
-                            $theQu->definition = new basicQuestion($theQu->title, true, $definition);
-                            $theQu->id=1;
-                        }else{
-                            $wordLimit = $json_questions->wordlimit;
-                            $theQu->definition = new TextQuestion($theQu->title, true, $wordLimit);
-                            $theQu->id=2;
-                        }
-                        $thisSession->addQuestion($theQu);
-                    }
-                }
-
-                //header('Location:index.php?sessionID='.$thisSession->id);
-                break;
-            case FORM_CANCELED:
-                header('Location:index.php');
-                break;
-            }
-
-            $template->pageData['mainBody'] .= '</div>';
-
-
-            //Removed by Jude
-	        // $template->pageData['mainBody'] .= "
-            // <div class='row'>
-            //     <div class='col-sm-8 col-sm-push-4'>
-            //         <a class='btn btn-primary' href='editsession.php'>
-            //         <i class='fa fa-plus-circle'></i> Create a new clicker session</a>
-            //     </div>
-            // </div>";
-
-
-            //This part shows staff sessions and creates links for them , if any
+	        $template->pageData['mainBody'] .= "<div class='row'><div class='col-sm-8 col-sm-push-4'><a class='btn btn-primary' href='editsession.php'><i class='fa fa-plus-circle'></i> Create a new clicker session</a></div></div>";
 		    $sessions = session::retrieve_session_matching('ownerID', $uinfo['uname']);
 	        if($sessions === false)
 	            $sessions = array();
 	        $sessions = array_merge($sessions, session::teacherExtraSessions($uinfo['uname']));
 		    $template->pageData['mainBody'] .= '<h2 class="page-section">My sessions (staff)</h2>';
-
-            if(sizeof($sessions) == 0)
+		    if(sizeof($sessions) == 0)
 		    {
 		        $template->pageData['mainBody'] .= "<p>No sessions found</p>";
 		    }
@@ -239,15 +121,12 @@ else
 		        foreach($sessions as $s)
 		        {
 		            $ctime = strftime("%A %e %B %Y at %H:%M", $s->created);
-		            $template->pageData['mainBody'] .= "<li><p class='session-title'><a href='sessionrun.php?sessionID={$s->id}'>{$s->title}</a><span class='user-badge session-id'><i class='fa fa-hashtag'></i> {$s->id}</span></p><p class='session-details'> Created $ctime</p><span class='feature-links'><a href='editsession.php?sessionID={$s->id}'><i class='fa fa-pencil'></i> Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'><i class='fa fa-trash-o'></i> Delete</a></span></li>";
+		            $template->pageData['mainBody'] .= "<li><p class='session-title'><a href='runsession.php?sessionID={$s->id}'>{$s->title}</a><span class='user-badge session-id'><i class='fa fa-hashtag'></i> {$s->id}</span></p><p class='session-details'> Created $ctime</p><span class='feature-links'><a href='editsession.php?sessionID={$s->id}'><i class='fa fa-pencil'></i> Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'><i class='fa fa-trash-o'></i> Delete</a></span></li>";
 		            //$template->pageData['mainBody'] .= "<li>Session number: <b>{$s->id}</b> <a href='runsession.php?sessionID={$s->id}'>{$s->title}</a> (Created $ctime) <span class='feature-links'><a href='editsession.php?sessionID={$s->id}'><i class='fa fa-pencil'></i> Edit</a> <a href='confirmdelete.php?sessionID={$s->id}'><i class='fa fa-trash-o'></i> Delete</a></span></li>";
 		        }
 		        $template->pageData['mainBody'] .= '</ul>';
 		    }
-
 	    }
-        //Staff parts end
-
 		$slist = sessionMember::retrieve_sessionMember_matching('userID', $uinfo['uname']);
 	    $template->pageData['mainBody'] .= '<h2 class="page-section">My sessions</h2>';
 	    $sessions = array();
@@ -301,8 +180,6 @@ else
 		$template->pageData['logoutLink'] = loginBox($uinfo);
     }
 }
-if(!isset($_REQUEST['ajax'])){
-    echo $template->render();
-}
+echo $template->render();
 
 ?>

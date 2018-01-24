@@ -23,7 +23,7 @@ $template->pageData['breadcrumb'] .= '<li><a href="index.php">YACRS</a></li>';
 if(requestSet('sessionID'))
 {
     $sessionID = requestInt('sessionID');
-	$template->pageData['breadcrumb'] .= "<li><a href='sessionrun.php?sessionID={$sessionID}'>Session {$sessionID}</a></li>";
+	$template->pageData['breadcrumb'] .= "<li><a href='runsession.php?sessionID={$sessionID}'>Session {$sessionID}</a></li>";
 }
 $template->pageData['breadcrumb'] .= '<li>Add/Edit a question</li>';
 $template->pageData['breadcrumb'] .= '</ul>';
@@ -37,7 +37,6 @@ else
     $userDetail = userInfo::retrieve_by_username($uinfo['uname']);
 	$thisSession = isset($sessionID)? session::retrieve_session($sessionID):false;
 	$theQu = requestSet('quID')? question::retrieve_question(requestInt('quID')):false;
-
     $template->pageData['mainBody'] = '';
 	//$template->pageData['mainBody'] = '<pre>'.print_r($uinfo,1).'</pre>';
 
@@ -53,8 +52,7 @@ else
         }
     }
     $template->pageData['mainBody'] .= $aqform->getHtml();
-    $K= $theQu? 'true':'false';
-    echo "<script>console.log('$K')</script>";
+
     if(!$theQu)
     {
     	$qtform = new selectQuestionType_form();
@@ -109,7 +107,7 @@ else
             $theQu->id = $theQu->insert();
 	    }
         $thisSession->addQuestion($theQu);
-	    header('Location:sessionrun.php?sessionID='.$eqform->sessionID);
+	    header('Location:runsession.php?sessionID='.$eqform->sessionID);
         //$template->pageData['mainBody'] = 'Location:runsession.php?sessionID='.$eqform->sessionID;
 
 	    //header('Location:index.php?id='.$project->id);

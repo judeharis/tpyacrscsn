@@ -47,8 +47,7 @@ class basicQuestion extends questionBase
         elseif($cCount == $optCount)
         {
         	$this->quType = 'MRS';
-            //Edited out so that all mcq with all correct answer works.
-            //$this->correct = false;
+            $this->correct = false;
         }
         elseif($cCount == 1)
         {
@@ -142,9 +141,8 @@ class basicQuestion extends questionBase
         //    $out .= '<legend>Input:</legend>';
         //else
         //    $out .= '<legend>You answered:</legend>';
-        
-        // if($this->displayStem)
-        //     $out .= "<p class='stem'>{$this->stem}</p>";
+        if($this->displayStem)
+            $out .= "<p class='stem'>{$this->stem}</p>";
         if($this->displayTitle)
             $out .= "<p class='stem'>{$title}</p>";
         $out .= "<div class='form-group'><div class='col-sm-12'>";
@@ -548,3 +546,4 @@ class editBasicQuestion_form extends nbform
         return new basicQuestion($this->title, $this->displayStem, $this->definition);
     }
 }
+

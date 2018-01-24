@@ -457,46 +457,6 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
     text-align: right;
 }
 
-.togglebtn {
-	width: 10%;
-	float: left;
-	display: block;
-	height: 34px;
-	padding: 6px 12px;
-	font-size: 14px;
-	line-height: 1.42857143;
-	color: #555;
-	background-color: #fff;
-	background-image: none;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
-
-.textinputbox {
-	width: 40%;
-	float: left;
-	display: inline;
-	height: 34px;
-	padding: 6px 12px;
-	font-size: 14px;
-	line-height: 1.42857143;
-	color: #555;
-	background-color: #fff;
-	background-image: none;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
-
 /* Overrides for Bootstrap's mobile theme */
 
 @media (min-width: 768px) {
@@ -507,7 +467,7 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 		top: 5px;
 		right: 5px;
 	}
-
+	
 }
 
 @media (max-width: 767px) {
@@ -516,17 +476,17 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 		display: block;
 		margin-top: 5px;
 	}
-
+	
 	#pageHeader {
     	min-height: 42px;
 	}
-
+	
 	#pageHeader .loginBox {
 		float: none;
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}
-
+	
 	#pageHeader .logo {
     	height: auto !important;
 		background-image: none !important;
@@ -537,7 +497,7 @@ h1, h2, h3, .adminSections > li, .adminSections > li a {
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}
-
+	
 	#pageHeader .col-xs-6:last-of-type {
     	text-align: right;
 	}

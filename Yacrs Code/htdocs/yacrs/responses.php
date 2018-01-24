@@ -18,7 +18,7 @@ $template->pageData['homeURL'] = $_SERVER['PHP_SELF'];
 
 $template->pageData['breadcrumb'] = $CFG['breadCrumb'];
 $template->pageData['breadcrumb'] .= '<li><a href="index.php">YACRS</a></li>';
-$template->pageData['breadcrumb'] .= "<li><a href='sessionrun.php?sessionID={$_REQUEST['sessionID']}'>Session {$_REQUEST['sessionID']}</a></li>";
+$template->pageData['breadcrumb'] .= "<li><a href='runsession.php?sessionID={$_REQUEST['sessionID']}'>Session {$_REQUEST['sessionID']}</a></li>";
 $template->pageData['breadcrumb'] .= '<li>Responses</li>';
 $template->pageData['breadcrumb'] .= '</ul>';
 
@@ -36,7 +36,7 @@ else
     $qu = question::retrieve_question($qi->theQuestion_id);
     //$template->pageData['mainBody'] = "<h2>$qu->title</h2>";
     // Work out where this questopn sits in list, show next and prev buttons...
-    $qiIDs = explode(',',$thisSession->questions);
+    $qiIDs = explode(',',$thisSession->questions);//the array of question_id that the section contain
     $qiIDPos = array_flip($qiIDs);
     $pos = $qiIDPos[$_REQUEST['qiID']];
     $PrevNextLinks = '<div class="col-xs-4 question-prev">';
@@ -52,7 +52,7 @@ else
     $PrevNextLinks .= '</div>';
     if(!empty($PrevNextLinks))
     	$template->pageData['mainBody'] .= '<div class="question-nav question-nav-top">'.$PrevNextLinks.'</div>';
-
+    	
     // End of next/prev button stuff
 	//$template->pageData['mainBody'] .= '<pre>'.print_r($qu->definition,1).'</pre>';
     if((strlen($qi->screenshot))&&(file_exists($qi->screenshot)))
@@ -60,9 +60,9 @@ else
         $template->pageData['mainBody'] .= "<img id='image' src='$qi->screenshot' style='float:right;'/>";
         $template->pageData['afterContent'] = getImageScript();
     }
-    if((class_exists(get_class($qi->qidefinition)))&&(get_class($qi->qidefinition)!='__PHP_Incomplete_Class'))
+    if((class_exists(get_class($qu->definition)))&&(get_class($qu->definition)!='__PHP_Incomplete_Class'))
     {
-    	$template->pageData['mainBody'] .= $qi->qidefinition->report($thisSession, $qi, (isset($_REQUEST['display']))&&($_REQUEST['display']=='detail'));
+    	$template->pageData['mainBody'] .= $qu->definition->report($thisSession, $qi, (isset($_REQUEST['display']))&&($_REQUEST['display']=='detail'));
     }
     else
     {

@@ -32,15 +32,12 @@ else
     if($esform->getStatus() == FORM_NOTSUBMITTED)
     {
         $esform->visible = true; // default to showing sessions.
-        $esform->allowQuReview = true; // default to allow change of answers while response open.
-        $esform->allowFullReview = true; // default to allow students to view their answers after class.
     }
     //$esform->disable('questionMode');
     //$esform->disable('defaultQuActiveSecs');
     //$esform->disable('allowQuReview');
     $esform->disable('maxMessagelength');
     $esform->disable('allowTeacherQu');
-
     if(requestSet('sessionID'))
     {
         $thisSession = session::retrieve_session(requestInt('sessionID'));
@@ -49,7 +46,6 @@ else
     {
         $thisSession = false;
     }
-    
 	switch($esform->getStatus())
 	{
 	case FORM_NOTSUBMITTED:

@@ -96,14 +96,11 @@ else
         deleteQi($thisSession);
     }
     $quTitles = array();
-
-
     if(strlen(trim($thisSession->questions)))
     {
         if($thisSession->questionMode == 0)
         {
             $template->pageData['mainBody'] .= getQuestionTableSingleQu($thisSession, $quTitles, $_SESSION['showday']);
-            echo "<script>console.log('0');</script>";
         }
         else
         {
@@ -113,8 +110,6 @@ else
     else
         $template->pageData['mainBody'] .= "<p>No questions added yet.</p>";
     $template->pageData['mainBody'] .= $aqform->getHtml();
-
-
     if($thisSession->questionMode == 0)
         $template->pageData['mainBody'] .= "<div><a href='switchmode.php?sessionID={$thisSession->id}'>Close question and switch to student paced (multi-question) mode.</a></div>";
     else
@@ -176,25 +171,6 @@ else
 }
 
 echo $template->render();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function getAJAXScript()

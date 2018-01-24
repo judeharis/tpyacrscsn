@@ -1,0 +1,65 @@
+body {
+    background-color: FBF3E5;
+}
+
+button {
+	border-radius: 12px;
+}
+
+
+.history div {
+	color: blue;
+	cursor: pointer;
+	display: inline-block;
+}
+
+
+
+table {  
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 70%; 
+    border-collapse: collapse; 
+	border-spacing: 0; 
+}
+
+td, th {  
+    border: 1px solid transparent; /* No more visible border */
+    height: 30px; 
+    transition: all 0.3s;  /* Simple transition for hover effect */
+}
+
+th {  
+    background: #DFDFDF;  /* Darken header a bit */
+    font-weight: bold;
+}
+
+td {  
+    background: #FAFAFA;
+}
+
+/*rounded corners on top left*/
+table th:first-child{
+	border-top-left-radius: 10px;
+}
+
+/*rounded corners on top right*/
+table th:last-child{
+	border-top-right-radius: 10px;
+}
+
+/* respon time look better */    
+tr td:last-child {
+	width: 95px;
+	text-align: center;
+	}
+
+/* Cells in even rows (2,4,6...) are one color */        
+tr:nth-child(even) td { background: #F1F1F1; }   
+
+/* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
+tr:nth-child(odd) td { background: #FEFEFE; }  
+
+table tr:hover td {
+	background: #666; color: #FFF;
+}/* Hover cell effect! */

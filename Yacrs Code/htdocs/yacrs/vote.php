@@ -69,10 +69,10 @@ else
         }
 
 		$template->pageData['breadcrumb'] .= "<li>{$thisSession->title}</li>";
-
+		
 		$template->pageData['breadcrumb'] .= '</ul>';
-
-        if($thisSession->questionMode == 0)
+		
+        if($thisSession->questionMode == 0)//dynamic question
         {
 	        if($thisSession->currentQuestion == 0)
 	        {
@@ -87,7 +87,7 @@ else
 	        }
 	        $template->pageData['mainBody'] .= "<div class='question-nav question-nav-bottom'><a href='vote.php?sessionID={$thisSession->id}&continue=1' class='pull-right'>Continue to Next Question &rsaquo;</a></div>";
         }
-        else
+        else//questionMode=1 form question
         {
 	        if((isset($thisSession->extras[currentQuestions]))&&(is_array($thisSession->extras[currentQuestions]))&&(sizeof($thisSession->extras[currentQuestions]) >= 0))
             {
@@ -148,75 +148,86 @@ else
 
 echo $template->render();
 
-function displayQuestion($qiid, $forceTitle=false)
+function displayQuestion($qiid, $forceTitle=true)
 {
     global $thisSession, $smemb;
     $out = '';
-    $qi = questionInstance::retrieve_questionInstance($qiid);
-    $qu = question::retrieve_question($qi->theQuestion_id);
-    $qu->definition = $qi->qidefinition;
-    $resp = response::retrieve($smemb->id, $qi->id);
-    if((isset($_REQUEST['continue']))&&($resp!==false))
-    {
-     $out .= "<div class='alert alert-danger'>Sorry, the next queston is not active yet.</div>";
-     header( "Refresh: 10; url={$serverURL}?sessionID={$thisSession->id}" );
-    }
-    if((isset($_REQUEST['submitans']))&&(isset($_REQUEST['qiID']))&&($_REQUEST['qiID']!==$qi->id))
-     $out .= "<div class='alert alert-danger'>Sorry, your answer was submitted after the question closed, so has been ignored.</div>";
-    if($qu){
-        $qu->definition->checkResponse($qi->id, $resp);
-        // New & replacement responses added here, partial responses for questions that support it done by checkResponse
-        if(($resp == false)&&($qu->definition->responseValue !== false)){
-            $resp = new response();
-            $resp->user_id = $smemb->id;
-            $resp->question_id = $qi->id;
-            $resp->value = $qu->definition->responseValue;
-            if(isset($qu->definition->partialResponse))
-             $resp->isPartial = $qu->definition->partialResponse;
-            else
-             $resp->isPartial = false;
-            $resp->insert();
-            $smemb->lastresponse = time();
-            $smemb->update();
-        }elseif($qu->definition->responseValue !== false){
-            $resp->value = $qu->definition->responseValue;
-            $resp->time = time();
-            $resp->update();
-            $smemb->lastresponse = time();
-            $smemb->update();
-        }
-        //To ensure that the student sees what is in the db.
-        if(isset($_REQUEST['submitans'])){
-            // Retrieve what the database has as the response
-            $resp = response::retrieve($smemb->id, $qi->id);
-            if($resp !== false)
-             $qu->definition->responseValue = $resp->value;
-        }
-        //$qu->definition
+     $qi = questionInstance::retrieve_questionInstance($qiid);
+     $qu = question::retrieve_question($qi->theQuestion_id);
+     $resp = response::retrieve($smemb->id, $qi->id);
+     if((isset($_REQUEST['continue']))&&($resp!==false))
+     {
+         $out .= "<div class='alert alert-danger'>Sorry, the next queston is not active yet.</div>";
+         header( "Refresh: 10; url={$serverURL}?sessionID={$thisSession->id}" );
+     }
+     if((isset($_REQUEST['submitans']))&&(isset($_REQUEST['qiID']))&&($_REQUEST['qiID']!==$qi->id))
+         $out .= "<div class='alert alert-danger'>Sorry, your answer was submitted after the question closed, so has been ignored.</div>";
+     if($qu)
+     {
+	     $qu->definition->checkResponse($qi->id, $resp);
+
+		 $qu->definition->options=array('Math', 'Language', 'Science', 'asd');//******this will change the chooses of the question. array with four items.******
+		 
+	     // New & replacement responses added here, partial responses for questions that support it done by checkResponse
+	     if(($resp == false)&&($qu->definition->responseValue !== false))
+	     {
+	         $resp = new response();
+	         $resp->user_id = $smemb->id;
+	         $resp->question_id = $qi->id;
+	         $resp->value = $qu->definition->responseValue;
+	         if(isset($qu->definition->partialResponse))
+	             $resp->isPartial = $qu->definition->partialResponse;
+	         else
+	             $resp->isPartial = false;
+	         $resp->insert();
+	         $smemb->lastresponse = time();
+	         $smemb->update();
+	     }
+         elseif($qu->definition->responseValue !== false)
+         {
+	         $resp->value = $qu->definition->responseValue;
+             $resp->time = time();
+	         $resp->update();
+	         $smemb->lastresponse = time();
+	         $smemb->update();
+         }
+         //To ensure that the student sees what is in the db.
+         if(isset($_REQUEST['submitans']))
+         {
+             // Retrieve what the database has as the response
+             $resp = response::retrieve($smemb->id, $qi->id);
+             if($resp !== false)
+                 $qu->definition->responseValue = $resp->value;
+         }
+	     //$qu->definition
         $out .= '<fieldset>';
         if(($resp == false)||($resp->isPartial))
-        $out .= '<legend>Input:</legend>';
+            $out .= '<legend>Input:</legend>';
         elseif(isset($_REQUEST['doupdate']))
-        $out .= '<legend>Update answer:</legend>';
+            $out .= '<legend>Update answer:</legend>';
         else
-        $out .= '<legend>You answered:</legend>';
+            $out .= '<legend>You answered:</legend>';
         //$out .= '<pre>'.print_r($resp,1).'</pre>';
-        $out .= "<form id='questionForm' method='POST' action='vote.php' class='form-horizontal'>";
-        $out .= "<input type='hidden' name='sessionID' value='{$thisSession->id}'/>";
-        $out .= "<input type='hidden' name='qiID' value='{$qi->id}'/>";
-        if($forceTitle){
-            $qu->definition->displayTitle = true;
-        }
-        $out .= $qu->definition->render($qi->title);
-        if(($qu->definition->responseValue === false)||(($thisSession->allowQuReview)&&(isset($_REQUEST['doupdate'])))){
-            $out .= "<input type='submit' name='submitans' value='Save Answer' class='btn btn-primary' />";
-        }elseif(($thisSession->allowQuReview)&&($qu->definition->allowReview())){
-            $out .= "<a href='vote.php?sessionID={$thisSession->id}&qiID={$qi->id}&doupdate=1' class='btn btn-success'>Change Answer</a>";
-        }
-        $out .= '</fieldset>';
-        $out .= "</form>";
-    }
-    //$template->pageData['mainBody'] .= '<pre>'.print_r($qu,1).'</pre>';
+	     $out .= "<form id='questionForm' method='POST' action='vote.php' class='form-horizontal'>";
+	     $out .= "<input type='hidden' name='sessionID' value='{$thisSession->id}'/>";
+	     $out .= "<input type='hidden' name='qiID' value='{$qi->id}'/>";
+         if($forceTitle)
+         {
+             $qu->definition->displayTitle = true;
+         }
+	     $out .= $qu->definition->render($qi->title);
+         if(($qu->definition->responseValue === false)||(($thisSession->allowQuReview)&&(isset($_REQUEST['doupdate']))))
+         {
+             $out .= "<input type='submit' name='submitans' value='Save Answer' class='btn btn-primary' />";
+         }
+         elseif(($thisSession->allowQuReview)&&($qu->definition->allowReview()))
+         {
+             $out .= "<a href='vote.php?sessionID={$thisSession->id}&qiID={$qi->id}&doupdate=1' class='btn btn-success'>Change Answer</a>";
+         }
+         $out .= '</fieldset>';
+	     $out .= "</form>";
+     }
+//$template->pageData['mainBody'] .= '<pre>'.print_r($qu,1).'</pre>';
     return $out;
 }
 
